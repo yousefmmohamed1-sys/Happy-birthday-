@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مفاجأة</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background: #000;
+        color: #fff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .container {
+        text-align: center;
+        width: 90%;
+        max-width: 500px;
+    }
+
+    #typed-text {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        min-height: 80px;
+        line-height: 1.8;
+    }
+    
+    /* مؤشر الكتابة */
+    #typed-text::after {
+        content: '|';
+        animation: blink 0.7s infinite;
+    }
+    
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+
+    .password-box {
+        opacity: 0;
+        transition: opacity 1s ease-in;
+        margin-top: 20px;
+    }
+    
+    .password-box.show {
+        opacity: 1;
+    }
+
+    input[type="password"] {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+        border: 2px solid #fff;
+        border-radius: 10px;
+        background: transparent;
+        color: #fff;
+        text-align: center;
+        outline: none;
+        margin-bottom: 15px;
+    }
+    
+    input[type="password"]:focus {
+        border-color: #ff00ff;
+        box-shadow: 0 0 15px #ff00ff;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+        background: #ff00ff;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    
+    button:hover {
+        background: #ff33ff;
+        transform: scale(1.05);
+    }
+
+    .hint {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #aaa;
+        opacity: 0;
+        transition: opacity 1s ease-in 0.5s;
+    }
+    
+    .hint.show {
+        opacity: 1;
+    }
+    
+    .error {
+        color: #ff3333;
+        margin-top: 10px;
+        font-size: 14px;
+        display: none;
+    }
+    
+    .success {
+        font-size: 28px;
+        color: #00ff88;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div id="typed-text"></div>
+    
+    <div class="password-box" id="passwordBox">
+        <input type="password" id="passwordInput" placeholder="دخلي الباسوورد هنا">
+        <button onclick="checkPassword()">ادخلي</button>
+        <div class="error" id="errorMsg">الباسوورد غلط 😅 جربي تاني</div>
+        <div class="hint" id="hint">* الباسوورد مع يوسف بس *</div>
+    </div>
+    
+    <div class="success" id="successMsg">
+        🎉 صح! المفاجأة جاية في الطريق 🎉
+    </div>
+</div>
+
+<script>
+    // النص اللي هيتكتب
+    const text = "يوم عيد ميلادك خلص بس عملك مفاجاه تانيه دخلي الباسوورد علشان تكملي";
+    let i = 0;
+    const speed = 70; // سرعة الكتابة بالمللي ثانية
+    
+    function typeWriter() {
+        if (i < text.length) {
+            document.getElementById("typed-text").innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, speed);
+        } else {
+            // بعد ما يخلص كتابة يظهر البوكس
+            setTimeout(() => {
+                document.getElementById("passwordBox").classList.add("show");
+                document.getElementById("hint").classList.add("show");
+            }, 500);
+        }
+    }
+    
+    // الباسوورد اللي انت عايزه
+    const correctPassword = "youssef"; // غيره للباسوورد اللي انت عايزه
+    
+    function checkPassword() {
+        const input = document.getElementById("passwordInput").value;
+        const error = document.getElementById("errorMsg");
+        
+        if (input.toLowerCase() === correctPassword.toLowerCase()) {
+            document.getElementById("passwordBox").style.display = "none";
+            document.getElementById("typed-text").style.display = "none";
+            document.getElementById("successMsg").style.display = "block";
+        } else {
+            error.style.display = "block";
+            setTimeout(() => error.style.display = "none", 2000);
+        }
+    }
+    
+    // يشتغل اول ما الصفحة تفتح
+    window.onload = typeWriter;
+    
+    // يسمح بالدوس Enter
+    document.getElementById("passwordInput").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") checkPassword();
+    });
+</script>
+
+</body>
+</html>
